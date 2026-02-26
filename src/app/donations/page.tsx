@@ -13,6 +13,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 import { useAppStore } from '@/store/useAppStore';
+import { getTranslation } from '@/lib/translations';
 
 // --- Interfaces ---
 interface Donation {
@@ -36,6 +37,8 @@ const INITIAL_MOCK_DATA: Donation[] = [
 ];
 
 export default function DonationsPage() {
+  const { language } = useAppStore();
+  const t = (key: any) => getTranslation(language, key);
   const [activeDonations, setActiveDonations] = useState<Donation[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -140,42 +143,42 @@ export default function DonationsPage() {
           <div className="space-y-1">
             <div className="flex items-center space-x-2 text-powder">
               <ShieldCheck className="w-4 h-4" />
-              <span className="text-[10px] font-black uppercase tracking-[0.3em]">Verified Transparency Portal</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.3em]">{t('verified_transparency')}</span>
             </div>
-            <h1 className="text-4xl font-black text-white tracking-tight">RELIEF CAPITAL DASHBOARD</h1>
-            <p className="text-neutral-500 max-w-xl">Centralized ledger for all disaster response funding. Every rupee is tracked and audited in real-time.</p>
+            <h1 className="text-4xl font-black text-white tracking-tight">{t('relief_cap_dash')}</h1>
+            <p className="text-neutral-500 max-w-xl">{t('donations_desc')}</p>
           </div>
           <button
             onClick={() => setIsModalOpen(true)}
             className="px-6 py-4 neo-btn text-white font-black text-xs uppercase tracking-widest rounded-2xl flex items-center group hover:text-powder"
           >
             <HandCoins className="w-4 h-4 mr-2 group-hover:rotate-12 transition-transform" />
-            Initiate Donation
+            {t('init_donation')}
           </button>
         </div>
 
         {/* Global Key Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <StatCard
-            label="Total Relief Liquidity"
+            label={t('total_liquidity')}
             value={`₹${stats.total.toLocaleString()}`}
-            sub="Consolidated Global Funds"
+            sub={t('consolidated_funds')}
             icon={IndianRupee}
             color="text-powder"
             bg="bg-powder/10"
           />
           <StatCard
-            label="Verified Benefactors"
+            label={t('verified_benefactors')}
             value={stats.donorCount.toString()}
-            sub="Individual & Corporate Entities"
+            sub={t('entities_desc')}
             icon={Users}
             color="text-powder"
             bg="bg-powder/10"
           />
           <StatCard
-            label="Today's Velocity"
+            label={t('today_velocity')}
             value={`₹${stats.todaysTotal.toLocaleString()}`}
-            sub="Real-time 24h inflow"
+            sub={t('inflow_24h')}
             icon={TrendingUp}
             color="text-ice"
             bg="bg-amber-400/10"
@@ -188,12 +191,12 @@ export default function DonationsPage() {
           <div className="xl:col-span-2 glass-panel p-8 relative overflow-hidden group">
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h3 className="text-white font-black text-xs uppercase tracking-widest mb-1">Funding Velocity</h3>
-                <p className="text-neutral-500 text-[10px] uppercase font-bold tracking-tighter">Last 7 Days (Tactical Analysis)</p>
+                <h3 className="text-white font-black text-xs uppercase tracking-widest mb-1">{t('funding_velocity')}</h3>
+                <p className="text-neutral-500 text-[10px] uppercase font-bold tracking-tighter">{t('last_7_days')}</p>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 rounded-full bg-sapphire animate-ping"></div>
-                <span className="text-[10px] font-black text-powder tracking-widest uppercase">Live Feed Active</span>
+                <span className="text-[10px] font-black text-powder tracking-widest uppercase">{t('live_feed')}</span>
               </div>
             </div>
             <div className="h-[300px] w-full">
@@ -234,7 +237,7 @@ export default function DonationsPage() {
 
           {/* Allocation Breakdown */}
           <div className="glass-panel p-8 flex flex-col">
-            <h3 className="text-white font-black text-xs uppercase tracking-widest mb-6">Strategic Allocation</h3>
+            <h3 className="text-white font-black text-xs uppercase tracking-widest mb-6">{t('strategic_allocation')}</h3>
             <div className="h-[200px] w-full flex-1">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -263,7 +266,13 @@ export default function DonationsPage() {
                 <div key={item.name} className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <div className="w-2 h-2 rounded-full" style={{ backgroundColor: CATEGORY_COLORS[item.name] }}></div>
-                    <span className="text-[10px] font-black text-neutral-400 tracking-widest uppercase">{item.name}</span>
+                    <span className="text-[10px] font-black text-neutral-400 tracking-widest uppercase">
+                      {item.name === 'General' ? t('general_relief') :
+                        item.name === 'Medical' ? t('medical_care') :
+                          item.name === 'Food' ? t('food_nutrition') :
+                            item.name === 'Shelter' ? t('emergency_housing') :
+                              item.name === 'Logistics' ? t('supply_logistics') : item.name}
+                    </span>
                   </div>
                   <span className="text-[10px] font-mono font-bold text-white">₹{item.value.toLocaleString()}</span>
                 </div>
@@ -280,8 +289,8 @@ export default function DonationsPage() {
                 <Wallet className="w-6 h-6 text-powder" />
               </div>
               <div>
-                <h3 className="text-lg font-black text-white tracking-tight uppercase">Contribution Ledger</h3>
-                <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Public chain of custody for all funds</p>
+                <h3 className="text-lg font-black text-white tracking-tight uppercase">{t('contribution_ledger')}</h3>
+                <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">{t('public_chain')}</p>
               </div>
             </div>
             <div className="relative group/search">
@@ -289,7 +298,7 @@ export default function DonationsPage() {
               <input
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="SEARCH BENEFACTOR OR PURPOSE..."
+                placeholder={t('search_donors')}
                 className="pl-12 pr-6 py-3 bg-black/40 border border-white/10 rounded-2xl text-[10px] font-black tracking-widest text-white focus:outline-none focus:border-sapphire focus:ring-1 focus:ring-sapphire/20 w-[300px] transition-all uppercase placeholder:text-neutral-700"
               />
             </div>
@@ -299,11 +308,11 @@ export default function DonationsPage() {
             <table className="w-full text-left">
               <thead>
                 <tr className="bg-white/[0.01] border-b border-white/5">
-                  <th className="px-8 py-5 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Timestamp</th>
-                  <th className="px-8 py-5 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Donor Entity</th>
-                  <th className="px-8 py-5 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Sector</th>
-                  <th className="px-8 py-5 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Amount</th>
-                  <th className="px-8 py-5 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">Allocation Status</th>
+                  <th className="px-8 py-5 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">{t('timestamp')}</th>
+                  <th className="px-8 py-5 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">{t('donor_entity')}</th>
+                  <th className="px-8 py-5 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">{t('sector')}</th>
+                  <th className="px-8 py-5 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">{t('amount')}</th>
+                  <th className="px-8 py-5 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em]">{t('alloc_status')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
@@ -335,7 +344,11 @@ export default function DonationsPage() {
                     </td>
                     <td className="px-8 py-6">
                       <span className="px-3 py-1 bg-white/[0.02] border border-white/10 rounded-full text-[9px] font-black text-neutral-400 uppercase tracking-widest">
-                        {donation.category}
+                        {donation.category === 'General' ? t('general_relief') :
+                          donation.category === 'Medical' ? t('medical_care') :
+                            donation.category === 'Food' ? t('food_nutrition') :
+                              donation.category === 'Shelter' ? t('emergency_housing') :
+                                donation.category === 'Logistics' ? t('supply_logistics') : donation.category}
                       </span>
                     </td>
                     <td className="px-8 py-6">
@@ -348,7 +361,7 @@ export default function DonationsPage() {
                       <div className="flex items-center space-x-2">
                         <div className={`w-1.5 h-1.5 rounded-full ${donation.status === 'Completed' ? 'bg-sapphire shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-ice animate-pulse'}`}></div>
                         <span className={`text-[10px] font-black uppercase tracking-widest ${donation.status === 'Completed' ? 'text-sapphire' : 'text-ice'}`}>
-                          {donation.status}
+                          {donation.status === 'Completed' ? t('completed') : t('processing')}
                         </span>
                       </div>
                     </td>
@@ -379,8 +392,8 @@ export default function DonationsPage() {
                 <div className="p-8 space-y-8">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h2 className="text-2xl font-black text-white tracking-tight uppercase">Initiate Contribution</h2>
-                      <p className="text-[10px] font-bold text-neutral-500 tracking-[0.2em] uppercase mt-1">Authorized Resource Allocation</p>
+                      <h2 className="text-2xl font-black text-white tracking-tight uppercase">{t('init_contrib')}</h2>
+                      <p className="text-[10px] font-bold text-neutral-500 tracking-[0.2em] uppercase mt-1">{t('auth_res_alloc')}</p>
                     </div>
                     <button onClick={() => setIsModalOpen(false)} className="text-neutral-500 hover:text-white">
                       <Plus className="w-6 h-6 rotate-45" />
@@ -389,36 +402,36 @@ export default function DonationsPage() {
 
                   <form onSubmit={handleSubmitDonation} className="space-y-6">
                     <FormInput
-                      label="Benefactor Name / Identity"
+                      label={t('benefactor_name')}
                       placeholder="Enter full name or organization..."
                       value={newDonation.donorName}
                       onChange={(v: string) => setNewDonation({ ...newDonation, donorName: v })}
                     />
                     <div className="grid grid-cols-2 gap-4">
                       <FormInput
-                        label="Amount (INR)"
+                        label={t('amount_inr')}
                         type="number"
                         placeholder="5000"
                         value={newDonation.amount}
                         onChange={(v: string) => setNewDonation({ ...newDonation, amount: v })}
                       />
                       <div className="space-y-2">
-                        <label className="text-[10px] font-black text-neutral-500 uppercase tracking-widest">Sector Allocation</label>
+                        <label className="text-[10px] font-black text-neutral-500 uppercase tracking-widest">{t('sector_alloc')}</label>
                         <select
                           value={newDonation.category}
                           onChange={(e) => setNewDonation({ ...newDonation, category: e.target.value as Donation['category'] })}
                           className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white focus:outline-none focus:border-sapphire"
                         >
-                          <option value="General">General Relief</option>
-                          <option value="Medical">Medical Care</option>
-                          <option value="Food">Food & Nutrition</option>
-                          <option value="Shelter">Emergency Housing</option>
-                          <option value="Logistics">Supply Logistics</option>
+                          <option value="General">{t('general_relief')}</option>
+                          <option value="Medical">{t('medical_care')}</option>
+                          <option value="Food">{t('food_nutrition')}</option>
+                          <option value="Shelter">{t('emergency_housing')}</option>
+                          <option value="Logistics">{t('supply_logistics')}</option>
                         </select>
                       </div>
                     </div>
                     <FormInput
-                      label="Purpose / Memo"
+                      label={t('purpose_memo')}
                       placeholder="Brief description of intent..."
                       value={newDonation.purpose}
                       onChange={(v) => setNewDonation({ ...newDonation, purpose: v })}
@@ -428,14 +441,14 @@ export default function DonationsPage() {
                       type="submit"
                       className="w-full py-5 neo-btn text-powder font-black uppercase tracking-widest rounded-3xl flex items-center justify-center group"
                     >
-                      Confirm Transmission
+                      {t('confirm_tx')}
                       <ArrowUpRight className="ml-2 w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                     </button>
                   </form>
                 </div>
                 <div className="p-4 bg-sapphire/10 border-t border-sapphire/20 flex items-center justify-center space-x-2">
                   <CheckCircle2 className="w-3 h-3 text-sapphire" />
-                  <span className="text-[9px] font-black text-sapphire uppercase tracking-widest italic text-center">Encrypted Transaction Pipeline Active</span>
+                  <span className="text-[9px] font-black text-sapphire uppercase tracking-widest italic text-center">{t('pipeline_active')}</span>
                 </div>
               </motion.div>
             </div>

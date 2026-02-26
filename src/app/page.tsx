@@ -24,12 +24,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import { DonationTracker } from '@/components/UI/DonationTracker';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
+import { ImpactTicker } from '@/components/UI/ImpactTicker';
+import { getTranslation } from '@/lib/translations';
 
 export default function CinematicHome() {
-  const { camps, alerts } = useAppStore();
+  const { camps, alerts, language } = useAppStore();
   const [viewMode, setViewMode] = useState<'globe' | 'map'>('globe');
 
   const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const t = (key: any) => getTranslation(language, key);
 
   const criticalAlerts = alerts.filter(a => a.type === 'Critical');
 
@@ -37,6 +41,9 @@ export default function CinematicHome() {
     <DashboardLayout>
       <div className="relative min-h-[calc(100vh-8rem)] space-y-10">
         {/* Background Cinematic scanlines handled by layout/globals */}
+
+        {/* Live Public Impact Ticker */}
+        <ImpactTicker />
 
         {/* Hero Section with Live 3D/2D Toggle */}
         <section className={`relative z-10 grid grid-cols-1 xl:grid-cols-4 gap-8 ${isFullscreen ? '' : 'xl:h-[calc(100vh-12rem)]'}`}>
@@ -52,7 +59,7 @@ export default function CinematicHome() {
             <button
               onClick={() => setIsFullscreen(!isFullscreen)}
               className="absolute top-6 right-20 z-[1001] p-3 neo-btn text-white rounded-xl hover:text-powder"
-              title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+              title={isFullscreen ? t('exit_fullscreen') : t('enter_fullscreen')}
             >
               {isFullscreen ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
             </button>
@@ -70,22 +77,12 @@ export default function CinematicHome() {
                   <StrategicGlobe onEngage={() => setViewMode('map')} />
 
                   {/* Globe HUD Overlay */}
-                  <div className="absolute top-8 right-8 space-y-4 pointer-events-none">
-                    <HUDIndicator label="SATELLITE SYNC" value="ENCRYPTED" />
-                    <HUDIndicator label="ORBITAL ALT" value="450KM" />
+                  <div className="absolute top-8 right-8 space-y-4 pointer-events-none text-right">
+                    <HUDIndicator label={t('satellite_sync')} value={t('encrypted')} />
+                    <HUDIndicator label={t('orbital_alt')} value="450KM" />
                   </div>
 
-                  <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center space-x-4">
-                    <button
-                      onClick={() => {
-                        setViewMode('map');
-                      }}
-                      className="px-8 py-3 neo-btn text-white font-black text-xs uppercase tracking-[0.2em] rounded-full hover:text-powder flex items-center"
-                    >
-                      <Maximize2 className="w-4 h-4 mr-2" />
-                      Engage Tactical Map
-                    </button>
-                  </div>
+
                 </motion.div>
               ) : (
                 <motion.div
@@ -102,7 +99,7 @@ export default function CinematicHome() {
                     onClick={() => setViewMode('globe')}
                     className="absolute top-6 left-6 z-[1000] px-4 py-2 bg-navy-panel/80 backdrop-blur-md border border-white/10 text-white text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-white hover:text-black transition-all"
                   >
-                    ← Return to Orbit
+                    ← {t('return_orbit')}
                   </button>
                 </motion.div>
               )}
@@ -124,9 +121,9 @@ export default function CinematicHome() {
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-[10px] font-black text-red-500 uppercase tracking-widest flex items-center">
                   <Zap className="w-3.5 h-3.5 mr-2" />
-                  Current Critical Needs
+                  {t('critical_needs')}
                 </h3>
-                <span className="text-[10px] text-neutral-400 font-bold">LIVE UPDATE</span>
+                <span className="text-[10px] text-neutral-400 font-bold">{t('live_update')}</span>
               </div>
 
               <div className="space-y-4">
@@ -142,7 +139,7 @@ export default function CinematicHome() {
                     </div>
                   </div>
                   <Link href="/donations" className="px-3 py-1.5 neo-btn text-red-400 hover:text-white text-[10px] font-bold uppercase rounded-lg text-center transition-colors">
-                    Fulfill
+                    {t('fulfill')}
                   </Link>
                 </div>
 
@@ -158,7 +155,7 @@ export default function CinematicHome() {
                     </div>
                   </div>
                   <Link href="/donations" className="px-3 py-1.5 neo-btn text-ice hover:text-white text-[10px] font-bold uppercase rounded-lg text-center transition-colors">
-                    Fulfill
+                    {t('fulfill')}
                   </Link>
                 </div>
 
@@ -174,7 +171,7 @@ export default function CinematicHome() {
                     </div>
                   </div>
                   <Link href="/donations" className="px-3 py-1.5 neo-btn text-powder hover:text-white text-[10px] font-bold uppercase rounded-lg text-center transition-colors">
-                    Fulfill
+                    {t('fulfill')}
                   </Link>
                 </div>
               </div>
@@ -184,18 +181,18 @@ export default function CinematicHome() {
             <div className="space-y-4 mt-6">
               <Link href="/volunteers/register" className="glass-card block p-5 group hover:border-sapphire/50 transition-all transform origin-top hover:scale-[1.02]">
                 <div className="flex items-center justify-between mb-1">
-                  <h4 className="font-black text-sm uppercase text-powder tracking-tight group-hover:text-blue-300">Join the Frontlines</h4>
+                  <h4 className="font-black text-sm uppercase text-powder tracking-tight group-hover:text-blue-300">{t('join_frontlines')}</h4>
                   <Users className="w-5 h-5 text-powder group-hover:text-blue-300" />
                 </div>
-                <p className="text-[10px] font-medium text-neutral-400 uppercase tracking-widest leading-relaxed">Expert deployment & field support.</p>
+                <p className="text-[10px] font-medium text-neutral-400 uppercase tracking-widest leading-relaxed">{t('expert_deployment')}</p>
               </Link>
 
               <Link href="/report" className="glass-card block p-5 group hover:border-neutral-400 transition-all transform origin-top hover:scale-[1.02]">
                 <div className="flex items-center justify-between mb-1">
-                  <h4 className="font-black text-sm uppercase text-white tracking-tight">Report Status</h4>
+                  <h4 className="font-black text-sm uppercase text-white tracking-tight">{t('report_status')}</h4>
                   <MessageSquarePlus className="w-5 h-5 text-neutral-400 group-hover:text-white transition-colors" />
                 </div>
-                <p className="text-[10px] font-medium text-neutral-500 uppercase tracking-widest leading-relaxed mt-1">Contribute real-time data from your sector.</p>
+                <p className="text-[10px] font-medium text-neutral-500 uppercase tracking-widest leading-relaxed mt-1">{t('contribute_data')}</p>
               </Link>
             </div>
           </div>
@@ -204,41 +201,38 @@ export default function CinematicHome() {
         {/* Strategic Info Grid */}
         <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 pb-20">
           <FeatureCard
-            title="Voice AI Assistant"
-            desc="Speak directly to PyroBot (Llama 70B) for real-time emergency guidance and protocols."
+            title={t('feat_bot_title')}
+            desc={t('feat_bot_desc')}
             icon={Bot}
             href="#"
             onClick={() => {
-              // This will be handled by the global chatbot state if I expose it, 
-              // but for now, the user can just click the bubble.
-              // I'll make it a special card that triggers the chatbot.
               const btn = document.querySelector('button[aria-label="Open Chat"]') as HTMLButtonElement;
               if (btn) btn.click();
             }}
             highlight
           />
           <FeatureCard
-            title="Resilience Hub"
-            desc="Find and navigate to the nearest active relief centers at AEC Guwahati."
+            title={t('feat_hub_title')}
+            desc={t('feat_hub_desc')}
             icon={Navigation}
             href="/camps"
           />
           <FeatureCard
-            title="Transparency Ledger"
-            desc="Unified donation and allocation tracking to ensure zero leakages."
+            title={t('feat_ledger_title')}
+            desc={t('feat_ledger_desc')}
             icon={Heart}
             href="/donations"
           />
           <FeatureCard
-            title="Volunteer Portal"
-            desc="Join the mission. Expert skill matching and proximity-based task allocation."
+            title={t('feat_vols_title')}
+            desc={t('feat_vols_desc')}
             icon={Users}
             href="/volunteers/register"
             highlight
           />
           <FeatureCard
-            title="Inventory Matrix"
-            desc="Real-time shortage prediction and supply chain monitoring."
+            title={t('feat_inventory_title')}
+            desc={t('feat_inventory_desc')}
             icon={Package}
             href="/resources"
           />

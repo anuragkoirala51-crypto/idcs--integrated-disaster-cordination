@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import { DashboardLayout } from '@/components/Layout/DashboardLayout';
+import { MeshSyncButton } from '@/components/UI/MeshSyncButton';
 import { Task, Skill } from '@/lib/types';
 
 const SKILL_ICONS: Record<Skill | string, any> = {
@@ -118,20 +119,23 @@ export default function VolunteerDashboard() {
             </div>
           </div>
 
-          <button
-            onClick={() => setIsOnline(!isOnline)}
-            className={`relative w-24 h-12 rounded-full transition-all duration-500 flex items-center px-1 neo-inset hover:border-sapphire/30 ${isOnline ? 'border-sapphire/50' : ''}`}
-          >
-            <motion.div
-              animate={{ x: isOnline ? 48 : 0 }}
-              className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg"
+          <div className="flex items-center gap-4">
+            <MeshSyncButton />
+            <button
+              onClick={() => setIsOnline(!isOnline)}
+              className={`relative w-24 h-12 rounded-full transition-all duration-500 flex items-center px-1 neo-inset hover:border-sapphire/30 ${isOnline ? 'border-sapphire/50' : ''}`}
             >
-              <div className={`w-3 h-3 rounded-full transition-colors ${isOnline ? 'bg-sapphire' : 'bg-neutral-500'}`}></div>
-            </motion.div>
-            <span className={`absolute font-black text-[10px] uppercase tracking-widest ${isOnline ? 'left-3 text-white' : 'right-3 text-neutral-500'}`}>
-              {isOnline ? 'On' : 'Off'}
-            </span>
-          </button>
+              <motion.div
+                animate={{ x: isOnline ? 48 : 0 }}
+                className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg"
+              >
+                <div className={`w-3 h-3 rounded-full transition-colors ${isOnline ? 'bg-sapphire' : 'bg-neutral-500'}`}></div>
+              </motion.div>
+              <span className={`absolute font-black text-[10px] uppercase tracking-widest ${isOnline ? 'left-3 text-white' : 'right-3 text-neutral-500'}`}>
+                {isOnline ? 'On' : 'Off'}
+              </span>
+            </button>
+          </div>
         </div>
 
         {/* Main Content Area */}

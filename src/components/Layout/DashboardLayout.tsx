@@ -18,43 +18,51 @@ import {
   Menu,
   X,
   Sun,
-  Moon
+  Moon,
+  Radio
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useAppStore } from '@/store/useAppStore';
 import { ChatBot } from '@/components/UI/ChatBot';
+import { LanguageSelector } from '@/components/UI/LanguageSelector';
+import { getTranslation } from '@/lib/translations';
 
 const publicNavigation = [
-  { name: 'Relief Hub', href: '/', icon: Home },
-  { name: 'Donations', href: '/donations', icon: Heart },
-  { name: 'Find Camps', href: '/camps', icon: Tent },
-  { name: 'Survival Protocols', href: '/protocols', icon: BookOpen },
-  { name: 'Join as Volunteer', href: '/volunteers/register', icon: Users },
-  { name: 'Report Need', href: '/report', icon: MessageSquarePlus },
-  { name: 'Supplies', href: '/resources', icon: Package },
+  { name: 'nav_hub', href: '/', icon: Home },
+  { name: 'nav_donations', href: '/donations', icon: Heart },
+  { name: 'nav_camps', href: '/camps', icon: Tent },
+  { name: 'nav_protocols', href: '/protocols', icon: BookOpen },
+  { name: 'nav_volunteer', href: '/volunteers/register', icon: Users },
+  { name: 'nav_report', href: '/report', icon: MessageSquarePlus },
+  { name: 'nav_supplies', href: '/resources', icon: Package },
+  { name: 'nav_chat', href: '/chat', icon: Radio },
 ];
 
 const volunteerNavigation = [
-  { name: 'Deploy Dashboard', href: '/volunteers', icon: Users },
-  { name: 'Training Hub', href: '/volunteers/training', icon: BookOpen },
-  { name: 'Active Route', href: '/volunteers/route', icon: Package }, // Route to be created
+  { name: 'nav_deploy', href: '/volunteers', icon: Users },
+  { name: 'nav_training', href: '/volunteers/training', icon: BookOpen },
+  { name: 'nav_route', href: '/volunteers/route', icon: Package },
+  { name: 'nav_chat', href: '/chat', icon: Radio },
 ];
 
 const authorityNavigation = [
-  { name: 'Fleet Command', href: '/government', icon: LayoutDashboard },
-  { name: 'Task Allocation', href: '/government/tasks', icon: Users },
-  { name: 'Incident Verification', href: '/government#reports', icon: Megaphone },
-  { name: 'National Inventory', href: '/inventory', icon: Package },
+  { name: 'nav_command', href: '/government', icon: LayoutDashboard },
+  { name: 'nav_tasks', href: '/government/tasks', icon: Users },
+  { name: 'nav_verification', href: '/government#reports', icon: Megaphone },
+  { name: 'nav_inventory', href: '/inventory', icon: Package },
+  { name: 'nav_chat', href: '/chat', icon: Radio },
 ];
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const { alerts, userRole, setRole, isHydrated, theme, toggleTheme } = useAppStore();
+  const { alerts, userRole, setRole, isHydrated, theme, toggleTheme, language } = useAppStore();
   const unreadAlerts = alerts.filter(a => !a.isRead).length;
   const isAuthorityView = userRole === 'government';
   const isVolunteerView = userRole === 'volunteer';
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const t = (key: any) => getTranslation(language, key);
 
   // Protect routes / enforce role selection
   useEffect(() => {
@@ -99,7 +107,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
           {userRole === 'public' && (
             <div className="mb-8">
-              <h3 className="px-3 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em] mb-4">Public Services</h3>
+              <h3 className="px-3 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em] mb-4">{t('role_public')}</h3>
               <nav className="space-y-1">
                 {publicNavigation.map((item) => {
                   const isActive = pathname === item.href;
@@ -114,7 +122,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                         }`}
                     >
                       <item.icon className={`w-4 h-4 mr-3 ${isActive ? 'text-powder' : 'text-neutral-500'}`} />
-                      {item.name}
+                      {t(item.name as any)}
                     </Link>
                   );
                 })}
@@ -124,7 +132,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
           {userRole === 'volunteer' && (
             <div className="mb-8">
-              <h3 className="px-3 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em] mb-4">Operations</h3>
+              <h3 className="px-3 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em] mb-4">{t('role_volunteer')}</h3>
               <nav className="space-y-1">
                 {volunteerNavigation.map((item) => {
                   const isActive = pathname === item.href;
@@ -139,7 +147,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                         }`}
                     >
                       <item.icon className={`w-4 h-4 mr-3 ${isActive ? 'text-powder' : 'text-neutral-500'}`} />
-                      {item.name}
+                      {t(item.name as any)}
                     </Link>
                   );
                 })}
@@ -149,7 +157,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
           {userRole === 'government' && (
             <div>
-              <h3 className="px-3 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em] mb-4">Administration</h3>
+              <h3 className="px-3 text-[10px] font-black text-neutral-500 uppercase tracking-[0.2em] mb-4">{t('role_admin')}</h3>
               <nav className="space-y-1">
                 {authorityNavigation.map((item) => {
                   const isActive = pathname === item.href;
@@ -164,7 +172,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                         }`}
                     >
                       <item.icon className={`w-4 h-4 mr-3 ${isActive ? 'text-powder' : 'text-neutral-500'}`} />
-                      {item.name}
+                      {t(item.name as any)}
                     </Link>
                   );
                 })}
@@ -183,14 +191,14 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 </div>
                 <div className="overflow-hidden">
                   <p className="text-xs font-bold text-white truncate text-ellipsis uppercase">{userRole} ACCESS</p>
-                  <p className="text-[10px] text-neutral-500 truncate">Connected</p>
+                  <p className="text-[10px] text-neutral-500 truncate">{t('connected')}</p>
                 </div>
               </div>
               <button
                 onClick={() => { setRole(null); router.push('/login'); }}
                 className="w-full py-1.5 neo-btn text-neutral-400 text-[10px] font-bold uppercase tracking-wider rounded-lg hover:text-white"
               >
-                Switch Role
+                {t('switch_role')}
               </button>
             </div>
           </div>
@@ -214,7 +222,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             <div className={`flex items-center space-x-2 ${isAuthorityView ? 'bg-sapphire/10 border-sapphire/20' : isVolunteerView ? 'bg-sapphire/10 border-sapphire/20' : 'bg-sapphire/10 border-sapphire/20'} border px-3 py-1.5 rounded-lg shadow-sm whitespace-nowrap overflow-hidden text-ellipsis min-w-0`}>
               <TriangleAlert className={`w-3.5 h-3.5 flex-shrink-0 ${isAuthorityView ? 'text-sapphire' : isVolunteerView ? 'text-sapphire' : 'text-sapphire'}`} />
               <span className={`text-[10px] font-black ${isAuthorityView ? 'text-sapphire' : isVolunteerView ? 'text-sapphire' : 'text-sapphire'} tracking-[0.1em] uppercase truncate`}>
-                PROTOTYPE/DEMO ONLY: Not connected to real emergency services.
+                {t('disclaimer')}
               </span>
             </div>
           </div>
@@ -223,9 +231,11 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             {isAuthorityView && (
               <div className="hidden md:flex items-center space-x-2 px-3 py-1 bg-sapphire/10 rounded-full border border-sapphire/20">
                 <ShieldCheck className="w-3.5 h-3.5 text-sapphire" />
-                <span className="text-[10px] font-bold text-sapphire uppercase tracking-tighter italic">Verified Administrator</span>
+                <span className="text-[10px] font-bold text-sapphire uppercase tracking-tighter italic">{t('verified_admin')}</span>
               </div>
             )}
+
+            <LanguageSelector />
 
             <button
               onClick={toggleTheme}

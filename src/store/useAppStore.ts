@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { Volunteer, Camp, Resource, Task, Donation, Alert, IncidentReport } from '../lib/types';
+import { SupportedLanguage } from '../lib/translations';
 import { submitIncidentReportAction, processDonationAction } from '../actions/mutations';
+import { queueAction } from '../lib/offlineSync';
 
 // Helper for distance calculation (Haversine Formula)
 const getDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
@@ -27,11 +29,13 @@ interface AppState {
   isHydrated: boolean;
   userRole: 'public' | 'volunteer' | 'government' | null;
   theme: 'dark' | 'light';
+  language: SupportedLanguage;
 
   // Actions
   setHydratedState: (state: Partial<AppState>) => void;
   setRole: (role: 'public' | 'volunteer' | 'government' | null) => void;
   toggleTheme: () => void;
+  setLanguage: (lang: SupportedLanguage) => void;
   addVolunteer: (volunteer: Volunteer) => void;
   updateVolunteerStatus: (id: string, status: Volunteer['status']) => void;
   assignVolunteerToTask: (volunteerId: string, taskId: string) => void;
@@ -43,6 +47,9 @@ interface AppState {
   addIncidentReport: (report: Omit<IncidentReport, 'id' | 'timestamp' | 'status'>) => void;
   addDonation: (donation: Omit<Donation, 'id' | 'status'>) => void;
   matchTasksForVolunteer: (volunteerId: string) => (Task & { distance: number })[];
+
+  // Swarm Sync
+  syncOfflineActions: (actions: any[]) => void;
 }
 
 // Initial Tasks and Alerts remain local for UI demonstration logic
@@ -90,6 +97,12 @@ export const useAppStore = create<AppState>((set, get) => ({
   setRole: (role) => {
     set({ userRole: role });
     if (typeof window !== 'undefined') localStorage.setItem('userRole', JSON.stringify(role));
+  },
+
+  language: 'en',
+  setLanguage: (lang: SupportedLanguage) => {
+    set({ language: lang });
+    if (typeof window !== 'undefined') localStorage.setItem('quantum_lang', lang);
   },
 
   toggleTheme: () => set((state) => {
@@ -164,6 +177,15 @@ export const useAppStore = create<AppState>((set, get) => ({
       return r;
     });
 
+    // Offline Sync Integration
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+      // If offline, push to the mesh queue for later sync
+      queueAction({
+        type: 'CONSUME_RESOURCE',
+        payload: { resourceId, amount }
+      }).catch(console.error);
+    }
+
     return { resources: newResources, alerts: newAlerts };
   }),
 
@@ -222,5 +244,14 @@ export const useAppStore = create<AppState>((set, get) => ({
         return { ...task, distance };
       })
       .sort((a, b) => a.distance - b.distance);
-  }
+  },
+
+  syncOfflineActions: (actions) => set((state) => {
+    // This simulates processing a batch of actions received from a peer or flushed from local DB
+    // Normally we'd re-run the logic carefully, but since the UI already updated optimistically 
+    // when they were made (for the sender), or we are just taking a new snapshot from a peer,
+    // we'll leave it as a placeholder to represent server merge logic.
+    console.log('Swarm Sync: Processed', actions.length, 'offline actions.');
+    return state;
+  })
 }));

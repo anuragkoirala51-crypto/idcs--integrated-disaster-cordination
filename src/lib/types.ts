@@ -85,3 +85,21 @@ export interface IncidentReport {
   status: 'Pending' | 'Verified' | 'Resolved';
   intensity: number; // 0.1 to 1.0 for heatmap weighting
 }
+
+export interface ChatMessage {
+  id: string;
+  pubkey: string;
+  content: string;
+  timestamp: number;
+  channelId: string;
+  alias: string;
+}
+
+export interface ChatChannel {
+  id: string;
+  name: string;
+  type: 'location' | 'camp' | 'emergency';
+  geohash?: string;
+  campId?: string;
+  description?: string;
+}

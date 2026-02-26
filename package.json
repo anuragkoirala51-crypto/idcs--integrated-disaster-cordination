@@ -21,6 +21,8 @@
     "lucide-react": "^0.575.0",
     "mongoose": "^9.2.2",
     "next": "16.1.6",
+    "ngeohash": "^0.6.3",
+    "nostr-tools": "^2.23.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-globe.gl": "^2.37.0",

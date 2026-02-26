@@ -1,8 +1,21 @@
 @import "tailwindcss";
 
+/* ── Dark Mode (default) ─────────────────────────────── */
 :root {
-  --background: #000000;
-  --foreground: #ffffff;
+  --bg-base: #000000;
+  --bg-panel: #080808;
+  --bg-card: #0c0c0c;
+  --bg-inset: #050505;
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-soft: rgba(255, 255, 255, 0.10);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.5);
+  --text-muted: rgba(255, 255, 255, 0.25);
+  --shadow-dark: #020202;
+  --shadow-light: #141414;
+
+  --background: var(--bg-base);
+  --foreground: var(--text-primary);
   --indigo-glow: 0 0 15px rgba(99, 102, 241, 0.5);
   --cyan-glow: 0 0 15px rgba(6, 182, 212, 0.5);
   --amber-glow: 0 0 15px rgba(245, 158, 11, 0.5);
@@ -10,6 +23,26 @@
   --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
   --font-serif: var(--font-cormorant), serif;
 }
+
+/* ── Light Mode overrides ────────────────────────────── */
+html.light-theme {
+  --bg-base: #f1f5f9;
+  --bg-panel: #e8edf5;
+  --bg-card: #dde4ef;
+  --bg-inset: #cbd5e8;
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border-soft: rgba(0, 0, 0, 0.12);
+  --text-primary: #0f172a;
+  --text-secondary: rgba(15, 23, 42, 0.55);
+  --text-muted: rgba(15, 23, 42, 0.35);
+  --shadow-dark: rgba(0, 0, 0, 0.12);
+  --shadow-light: rgba(255, 255, 255, 0.80);
+
+  --background: var(--bg-base);
+  --foreground: var(--text-primary);
+}
+
+
 
 @layer base {
   body {
@@ -36,52 +69,39 @@
   }
 }
 
-/* Light Theme Implementation via CSS Filters */
-html.light-theme {
-  filter: invert(1) hue-rotate(180deg);
-  background: white;
-  /* Force white background so inversion works properly on html tag */
-}
-
-/* Re-invert media, maps, and specific elements so they look normal */
-html.light-theme img,
-html.light-theme video,
-html.light-theme .leaflet-container,
-html.light-theme .leaflet-pane,
-html.light-theme .leaflet-control,
-html.light-theme iframe {
-  filter: invert(1) hue-rotate(180deg);
-}
-
 @layer components {
 
   /* Neumorphic Tactical UI */
   .glass-panel {
-    background: #0a0a0a;
-    box-shadow: 6px 6px 16px #020202, -4px -4px 12px #141414;
-    @apply rounded-[32px] border border-white/5 transition-all duration-300;
+    background: var(--bg-panel);
+    box-shadow: 6px 6px 16px var(--shadow-dark), -4px -4px 12px var(--shadow-light);
+    border: 1px solid var(--border-subtle);
+    @apply rounded-[32px] transition-all duration-300;
   }
 
   .glass-card {
-    background: #0c0c0c;
-    box-shadow: 4px 4px 12px #040404, -4px -4px 12px #181818;
-    @apply rounded-2xl border border-white/10 transition-all duration-300;
+    background: var(--bg-card);
+    box-shadow: 4px 4px 12px var(--shadow-dark), -4px -4px 12px var(--shadow-light);
+    border: 1px solid var(--border-soft);
+    @apply rounded-2xl transition-all duration-300;
   }
 
   .neo-inset {
-    background: #050505;
-    box-shadow: inset 4px 4px 8px #020202, inset -4px -4px 8px #0f0f0f;
-    @apply border border-white/5;
+    background: var(--bg-inset);
+    box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+    border: 1px solid var(--border-subtle);
   }
 
   .neo-btn {
-    box-shadow: 4px 4px 10px #020202, -4px -4px 10px #141414;
-    @apply transition-all duration-200 border border-white/5;
+    box-shadow: 4px 4px 10px var(--shadow-dark), -4px -4px 10px var(--shadow-light);
+    border: 1px solid var(--border-subtle);
+    @apply transition-all duration-200;
   }
 
   .neo-btn:active {
-    box-shadow: inset 4px 4px 8px #020202, inset -4px -4px 8px #0f0f0f;
+    box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
   }
+
 
   /* Cyber Glows */
   .glow-indigo {
@@ -227,4 +247,147 @@ html.light-theme iframe {
     transform: scale(3);
     opacity: 0;
   }
+}
+
+/* ── Comprehensive Light Theme Overrides ──────────────── */
+/* These override the hardcoded Tailwind utility classes   */
+/* used across all components so they respond to the theme */
+
+html.light-theme body {
+  background: var(--bg-base) !important;
+  color: var(--text-primary) !important;
+}
+
+/* ── Text Color Overrides ─────────────────────────────── */
+html.light-theme .text-white {
+  color: #0f172a !important;
+}
+
+html.light-theme .text-neutral-100 {
+  color: #1e293b !important;
+}
+
+html.light-theme .text-neutral-200 {
+  color: #334155 !important;
+}
+
+html.light-theme .text-neutral-300 {
+  color: #475569 !important;
+}
+
+html.light-theme .text-neutral-400 {
+  color: #64748b !important;
+}
+
+html.light-theme .text-neutral-500 {
+  color: #64748b !important;
+}
+
+html.light-theme .text-neutral-600 {
+  color: #475569 !important;
+}
+
+/* ── Background Color Overrides ───────────────────────── */
+html.light-theme .bg-navy,
+html.light-theme .bg-black {
+  background-color: var(--bg-base) !important;
+}
+
+html.light-theme .bg-navy-panel {
+  background-color: var(--bg-panel) !important;
+}
+
+html.light-theme .bg-navy\/50,
+html.light-theme .bg-navy\/20,
+html.light-theme .bg-black\/60,
+html.light-theme .bg-black\/80 {
+  background-color: var(--bg-card) !important;
+}
+
+html.light-theme .bg-navy-panel\/50,
+html.light-theme .bg-navy-panel\/80,
+html.light-theme .bg-navy-panel\/90 {
+  background-color: var(--bg-panel) !important;
+}
+
+/* ── Border Color Overrides ───────────────────────────── */
+html.light-theme .border-white\/5,
+html.light-theme .border-white\/10,
+html.light-theme .border-white\/20 {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+html.light-theme .border-neutral-800 {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+html.light-theme .border-r.border-white\/5 {
+  border-right-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+html.light-theme .border-b.border-white\/5 {
+  border-bottom-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ── Scrollbar Light Mode ─────────────────────────────── */
+html.light-theme ::-webkit-scrollbar-track {
+  background: #e2e8f0;
+}
+
+html.light-theme ::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+}
+
+html.light-theme ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* ── Leaflet Light Mode ───────────────────────────────── */
+html.light-theme .leaflet-container {
+  background: #e2e8f0 !important;
+}
+
+html.light-theme .custom-popup .leaflet-popup-content-wrapper {
+  background: rgba(241, 245, 249, 0.95) !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+html.light-theme .custom-popup .leaflet-popup-tip {
+  background: rgba(241, 245, 249, 0.95) !important;
+}
+
+/* ── Misc Overrides ───────────────────────────────────── */
+html.light-theme .bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+}
+
+html.light-theme .backdrop-blur-md,
+html.light-theme .backdrop-blur-xl {
+  backdrop-filter: blur(12px);
+}
+
+/* Make sure accent colors stay vibrant in light mode */
+html.light-theme .text-powder {
+  color: #4f46e5 !important;
+}
+
+html.light-theme .text-sapphire {
+  color: #4338ca !important;
+}
+
+html.light-theme .text-ice {
+  color: #0891b2 !important;
+}
+
+html.light-theme .text-red-400,
+html.light-theme .text-red-500 {
+  color: #dc2626 !important;
+}
+
+/* Shadow inset overrides for light mode readability */
+html.light-theme .shadow-\[inset_0_0_100px_rgba\(99\,102\,241\,0\.2\)\] {
+  box-shadow: inset 0 0 100px rgba(99, 102, 241, 0.05) !important;
 }
